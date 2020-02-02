@@ -18,13 +18,15 @@ public class H2EngineTest {
 
     @BeforeAll
     public static void beforeAll() throws Exception {
-        engine = H2Engine.getEngine();
+        engine = new H2Engine.Builder()
+        		.port(9001)
+        		.clear(true)
+        		.build();
         engine.start();
     }
 
     @AfterAll
     public static void afterAll() throws Exception {
-        engine.clearDatabase(true);
         engine.stop();
     }
 

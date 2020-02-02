@@ -58,9 +58,13 @@ public class DatabaseExtension implements BeforeAllCallback, AfterAllCallback, B
         if(null == database)
             return;
         logging(database.logging());
-        H2Engine engine = H2Engine.getEngine(H2Engine.H2_DIR,
-                database.port(), database.db(),
-                database.before(), database.after());
+        H2Engine engine = new H2Engine.Builder()
+        		.port(database.port())
+        		.name(database.db())
+        		.clear(database.clear())
+        		.before(database.before())
+        		.after(database.after())
+        		.build();
         context.getStore(NAMESPACE).put(getStoreKey(context, StoreKeyType.H2_CLASS), engine);
         engine.start();
         EmbeddedDataSource datasource = new EmbeddedDataSource(engine);
@@ -129,7 +133,6 @@ public class DatabaseExtension implements BeforeAllCallback, AfterAllCallback, B
         }
         datasource.close();
         H2Engine engine = context.getStore(NAMESPACE).remove(getStoreKey(context, StoreKeyType.H2_CLASS), H2Engine.class);
-        engine.clearDatabase(database.clear());
         engine.stop();
         if (database.report()) {
             report("Test Database", context, engine);

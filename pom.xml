@@ -40,7 +40,7 @@
     <jaxb.version>2.3.1</jaxb.version> <!-- 2.3.0, 2.3.1  -->
     <ejb.version>3.2</ejb.version>
 
-    <eclipselink.version>2.7.4</eclipselink.version>
+    <eclipselink.version>2.7.5</eclipselink.version>
     <mojarra.version>2.4.0</mojarra.version>
     <myfaces.version>2.2.10</myfaces.version>
     <weld.version>3.1.0.Final</weld.version>
@@ -49,7 +49,7 @@
     <poi.version>4.0.1</poi.version>
     <xerces.version>2.12.0</xerces.version>
     <hibernate.version>6.1.0.Alpha3</hibernate.version>
-    <h2.version>1.4.199</h2.version>
+    <h2.version>1.4.200</h2.version>
     <tomcat8.version>8.0.38</tomcat8.version>
     <tomcat85.version>8.5.38</tomcat85.version>
     <tomcat9.version>9.0.16</tomcat9.version>
