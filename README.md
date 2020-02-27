@@ -9,7 +9,7 @@
  - 使用@Benchmark注解简单绑定一个已有的TestCase。
 
 
-###1. Simple benchmark a exited test case
+### 1. Simple benchmark a exited test case
 ```java
 import net.tiny.benchmark.Benchmark;
 
@@ -22,7 +22,7 @@ public class SampleTest {
 }
 ```
 
-###2. Benchmark your all your test cases
+### 2. Benchmark your all your test cases
 ```java
 import net.tiny.benchmark.Benchmark;
 
@@ -35,7 +35,7 @@ public class SampleTest {
 }
 ```
 
-###3. Include benchmark in your code
+### 3. Include benchmark in your code
 ```java
 import net.tiny.benchmark.Benchmarker;
 
@@ -66,7 +66,7 @@ Summary ETA:66ms 459889ns MIPS:0.241 0.004ms/per min:51.520K/s max:395.396K/s av
  - 使用@Database注解简单绑定一个已有的TestCase。
 
 
-###2. Simple JDBC test for a exited test case
+### 1. Simple JDBC test for a exited test case
 ```java
 import net.tiny.unit.Database;
 
@@ -91,7 +91,7 @@ public class SampleTest {
 ```
 
 
-###2. Simple JPA test for a exited test case
+### 2. Simple JPA test for a exited test case
 ```java
 import net.tiny.unit.Database;
 
@@ -116,7 +116,7 @@ public class SampleTest {
 ```
 
 
-##More Detail, See The Samples
+## More Detail, See The Samples
 
 ---
 Email   : wuweibg@gmail.com

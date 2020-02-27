@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.StringReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -59,19 +58,19 @@ public class DatabaseExtension implements BeforeAllCallback, AfterAllCallback, B
             return;
         logging(database.logging());
         H2Engine engine = new H2Engine.Builder()
-        		.port(database.port())
-        		.name(database.db())
-        		.clear(database.clear())
-        		.before(database.before())
-        		.after(database.after())
-        		.build();
+                .port(database.port())
+                .name(database.db())
+                .clear(database.clear())
+                .before(database.before())
+                .after(database.after())
+                .build();
         context.getStore(NAMESPACE).put(getStoreKey(context, StoreKeyType.H2_CLASS), engine);
         engine.start();
         EmbeddedDataSource datasource = new EmbeddedDataSource(engine);
         context.getStore(NAMESPACE).put(getStoreKey(context, StoreKeyType.DS_CLASS), datasource);
 
         if (!database.createScript().isEmpty()) {
-            runScript(new File(database.createScript()), datasource.getConnection());
+            runScript(new File(database.createScript()), datasource.getConnection(), database.trace());
         }
 
         JpaHelper helper = new JpaHelper(database.persistence(),
@@ -129,7 +128,7 @@ public class DatabaseExtension implements BeforeAllCallback, AfterAllCallback, B
         }
         EmbeddedDataSource datasource = context.getStore(NAMESPACE).remove(getStoreKey(context, StoreKeyType.DS_CLASS), EmbeddedDataSource.class);
         if (!database.dropScript().isEmpty()) {
-            runScript(new File(database.dropScript()), datasource.getConnection());
+            runScript(new File(database.dropScript()), datasource.getConnection(), database.trace());
         }
         datasource.close();
         H2Engine engine = context.getStore(NAMESPACE).remove(getStoreKey(context, StoreKeyType.H2_CLASS), H2Engine.class);
@@ -194,26 +193,15 @@ public class DatabaseExtension implements BeforeAllCallback, AfterAllCallback, B
                 .collect(Collectors.toList());
     }
 
-    static void runScript(File file, Connection conn) throws IOException, SQLException {
+    static void runScript(File file, Connection conn, boolean trace) throws IOException, SQLException {
         // Give the input file to Reader
         Reader reader = new BufferedReader(new FileReader(file));
         try {
             // Initialize object for ScripRunner
             ScriptRunner scriptRunner = new ScriptRunner(conn, true, true);
-            // Exctute script
-            scriptRunner.runScript(reader);
-        } finally {
-            reader.close();
-            conn.close();
-        }
-    }
-
-    static void runScript(String script, Connection conn) throws IOException, SQLException {
-        // Give the input file to Reader
-        Reader reader = new StringReader(script);
-        try {
-            // Initialize object for ScripRunner
-            ScriptRunner scriptRunner = new ScriptRunner(conn, true, true);
+            if (trace) {
+                scriptRunner.setLogWriter(new PrintWriter(System.out));
+            }
             // Exctute script
             scriptRunner.runScript(reader);
         } finally {

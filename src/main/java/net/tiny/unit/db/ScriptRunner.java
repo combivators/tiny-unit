@@ -31,8 +31,7 @@ public class ScriptRunner {
     /**
      * Default constructor
      */
-    public ScriptRunner(Connection connection, boolean autoCommit,
-            boolean stopOnError) {
+    public ScriptRunner(Connection connection, boolean autoCommit, boolean stopOnError) {
         this.connection = connection;
         this.autoCommit = autoCommit;
         this.stopOnError = stopOnError;
@@ -108,19 +107,26 @@ public class ScriptRunner {
             LineNumberReader lineReader = new LineNumberReader(reader);
             String line = null;
             while ((line = lineReader.readLine()) != null) {
+                System.out.println("##### " + line);
                 if (command == null) {
                     command = new StringBuffer();
                 }
                 String trimmedLine = line.trim();
                 if (trimmedLine.startsWith("--")) {
                     println(trimmedLine);
-                } else if (trimmedLine.length() < 1
+                    continue;
+                }
+                if (trimmedLine.length() < 1
                         || trimmedLine.startsWith("//")) {
                     // Do nothing
-                } else if (trimmedLine.length() < 1
+                    continue;
+                }
+                if (trimmedLine.length() < 1
                         || trimmedLine.startsWith("--")) {
                     // Do nothing
-                } else if (!fullLineDelimiter
+                    continue;
+                }
+                if (!fullLineDelimiter
                         && trimmedLine.endsWith(getDelimiter())
                         || fullLineDelimiter
                         && trimmedLine.equals(getDelimiter())) {
@@ -129,9 +135,10 @@ public class ScriptRunner {
                     command.append(" ");
                     Statement statement = conn.createStatement();
 
-                    println(command);
+                    println(command.toString());
 
                     boolean hasResults = false;
+
                     if (stopOnError) {
                         hasResults = statement.execute(command.toString());
                     } else {
@@ -203,6 +210,8 @@ public class ScriptRunner {
 
     private void print(Object o) {
         if (logWriter != null) {
+            logWriter.print(o);
+        } else {
             System.out.print(o);
         }
     }
@@ -210,12 +219,16 @@ public class ScriptRunner {
     private void println(Object o) {
         if (logWriter != null) {
             logWriter.println(o);
+        } else {
+            System.out.println(o);
         }
     }
 
     private void printlnError(Object o) {
         if (errorLogWriter != null) {
             errorLogWriter.println(o);
+        } else {
+            System.err.println(o);
         }
     }
 
